@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def cargar_dataset():
     """Devuelve un DataFrame con el dataset usado para entrenar."""
     data = {

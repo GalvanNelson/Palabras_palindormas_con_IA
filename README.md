@@ -1,31 +1,31 @@
-# Clasificador de Palíndromos con IA
+# Palíndromos API
 
-Proyecto refactorizado en módulos:
-
-- `dataset.py` - carga el DataFrame de entrenamiento
-- `features.py` - funciones para extraer características de cadenas
-- `model.py` - clase que encapsula el modelo (DecisionTreeClassifier)
-- `gui.py` - interfaz gráfica con Tkinter
-- `main.py` - punto de entrada que inicia la GUI
+Esta pequeña aplicación expone un endpoint HTTP para predecir si una palabra es válida (palíndromo) usando un modelo de ejemplo.
 
 Requisitos:
+
 - Python 3.8+
-- Instalar dependencias desde `requirements.txt` (pandas, scikit-learn, etc.)
+- dependencias en `requirements.txt`
 
-Cómo ejecutar:
-
-1. Crear un entorno virtual (opcional pero recomendado).
-2. Instalar dependencias:
+Instalación:
 
 ```powershell
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-3. Ejecutar la aplicación:
+Ejecutar API:
 
 ```powershell
-python main.py
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Notas:
-- El modelo se entrena al iniciar la app. Para mejorar la detección de frases con espacios y signos, se pueden añadir pasos de limpieza adicionales en `features.py`.
+Endpoint:
+
+- POST /predict  -> JSON {"texto": "cadena"}
+
+Ejemplo de petición (PowerShell):
+
+```powershell
+$body = '{"texto":"radar"}'
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/predict -Body $body -ContentType 'application/json'
+```
