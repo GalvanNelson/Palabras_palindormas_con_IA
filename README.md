@@ -16,7 +16,7 @@ Clonar el proyecto
 git clone https://github.com/GalvanNelson/Palabras_palindormas_con_IA.git
 ```
 
-### instalcion backend
+### Instalacion backend
 
 ```bash
   cd backend
