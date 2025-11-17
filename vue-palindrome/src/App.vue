@@ -6,23 +6,22 @@
       <h2 class="subtitle" :class="{ 'animate-subtitle': animate }">Expociencia 2025</h2>
 
       <label class="input-wrap">
-        <input v-model="text" @input="analyzeLocal" placeholder="Escribe una palabra o frase..." />
+        <input v-model="text" placeholder="Escribe una palabra o frase..." />
         <button @click="clear">✕</button>
       </label>
 
       <div class="result" v-if="status!=='idle'">
         <div v-if="status==='loading'">🔎 Consultando la IA...</div>
         <div v-if="status==='success'">
-          <p v-if="response?.isPalindrome">✅ Es palíndromo</p>
+          <p v-if="response?.prediccion === 1">✅ Es palíndromo</p>
           <p v-else>❌ No es palíndromo</p>
-          <p class="details" v-if="response?.normalized">Normalizado: <code>{{ response.normalized }}</code></p>
+          <p class="details" v-if="response?.features">Features: <code>{{ response.features }}</code></p>
         </div>
         <div v-if="status==='error'">⚠ {{ errorMsg }}</div>
       </div>
 
       <div class="controls">
         <button @click="callApi" :disabled="!text.trim()">Enviar a IA</button>
-        <small>O usa la verificación local (sin IA) — útil para pruebas.</small>
       </div>
     </div>
   </main>
@@ -44,26 +43,16 @@ export default {
     setTimeout(() => { this.animate = true }, 100)
   },
   methods: {
-    normalizeLocal(s) {
-      const lower = s.toLowerCase()
-      const noAcc = lower.normalize('NFD').replace(/\p{Diacritic}/gu, '')
-      return noAcc.replace(/[^a-z0-9]/gi, '')
-    },
-    analyzeLocal() {
-      const n = this.normalizeLocal(this.text)
-      this.response = { isPalindrome: n.length>0 && n===n.split('').reverse().join(''), normalized: n }
-      this.status = this.text.trim() ? 'success' : 'idle'
-    },
     async callApi() {
       if (!this.text.trim()) return
       this.status = 'loading'
       this.response = null
       this.errorMsg = ''
       try {
-        const res = await fetch('http://localhost:3000/api/detect', {
+        const res = await fetch('http://localhost:8000/predecir', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: this.text })
+          body: JSON.stringify({ texto: this.text })
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
