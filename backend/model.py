@@ -11,19 +11,20 @@ class PalindromoModelo:
         """Entrena el modelo con X (lista de features) y y (etiquetas)."""
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-        self.model = DecisionTreeClassifier()
+        self.model = DecisionTreeClassifier(max_depth=10, min_samples_split=2, random_state=random_state)
         self.model.fit(X_train, y_train)
         y_pred = self.model.predict(X_test)
-        return accuracy_score(y_test, y_pred)
+        accuracy = accuracy_score(y_test, y_pred)
+        
+        # También entrenar con todos los datos para mejor predicción en producción
+        self.model.fit(X, y)
+        
+        return accuracy
 
     def predecir(self, caracteristicas):
-        """Predice usando el modelo entrenado; si no hay modelo, usa un fallback simple."""
+        """Predice usando el modelo entrenado; si no hay modelo, retorna error."""
         if self.model is None:
-            # suponer que caracteristicas = [longitud, es_palindromo]
-            try:
-                return int(caracteristicas[1])
-            except Exception:
-                return 0
+            raise ValueError("El modelo no ha sido entrenado aún")
 
         return int(self.model.predict([caracteristicas])[0])
 

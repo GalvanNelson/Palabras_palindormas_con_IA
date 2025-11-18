@@ -13,9 +13,44 @@
       <div class="result" v-if="status!=='idle'">
         <div v-if="status==='loading'">🔎 Consultando la IA...</div>
         <div v-if="status==='success'">
-          <p v-if="response?.prediccion === 1">✅ Es palíndromo</p>
-          <p v-else>❌ No es palíndromo</p>
-          <p class="details" v-if="response?.features">Features: <code>{{ response.features }}</code></p>
+          <div class="prediction-result">
+            <p class="main-result" v-if="response?.prediccion === 1">✅ Es palíndromo</p>
+            <p class="main-result" v-else>❌ No es palíndromo</p>
+          </div>
+          
+          <div class="features-section" v-if="response?.features">
+            <h3>🧠 Análisis de la IA</h3>
+            <div class="feature-list">
+              <div class="feature-item">
+                <span class="feature-label">📏 Longitud:</span>
+                <span class="feature-value">{{ response.features[0] }} caracteres</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-label">🔤 Primera = Última:</span>
+                <span class="feature-value">{{ response.features[1] === 1 ? 'Sí ✓' : 'No ✗' }}</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-label">🅰️ Vocales:</span>
+                <span class="feature-value">{{ response.features[2] }}</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-label">🅱️ Consonantes:</span>
+                <span class="feature-value">{{ response.features[3] }}</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-label">🔢 Letras únicas:</span>
+                <span class="feature-value">{{ (response.features[4] * 100).toFixed(0) }}%</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-label">🪞 Coincidencias espejo:</span>
+                <span class="feature-value">{{ (response.features[5] * 100).toFixed(0) }}%</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-label">⚖️ Simetría de vocales:</span>
+                <span class="feature-value">Diferencia: {{ response.features[6] }}</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div v-if="status==='error'">⚠ {{ errorMsg }}</div>
       </div>
@@ -148,6 +183,60 @@ body{font-family:Inter,system-ui,Arial;margin:0;background:linear-gradient(180de
 .result{
   margin-top:16px;
 }
+
+.prediction-result{
+  margin-bottom:20px;
+}
+
+.main-result{
+  font-size:1.5rem;
+  font-weight:600;
+  margin:10px 0;
+}
+
+.features-section{
+  background:#f8f9fa;
+  border-radius:10px;
+  padding:16px;
+  margin-top:16px;
+  text-align:left;
+}
+
+.features-section h3{
+  margin:0 0 12px 0;
+  font-size:1.1rem;
+  color:#0f172a;
+  text-align:center;
+}
+
+.feature-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.feature-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 12px;
+  background:#fff;
+  border-radius:6px;
+  border-left:3px solid var(--accent);
+}
+
+.feature-label{
+  font-weight:500;
+  color:#4b5563;
+  font-size:0.9rem;
+}
+
+.feature-value{
+  font-weight:600;
+  color:#0f172a;
+  font-size:0.95rem;
+}
+
 .controls{
   margin-top:18px;
   display:flex;
